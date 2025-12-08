@@ -1,61 +1,43 @@
 #include "Button.h"
 
 Button::Button(uint8_t buttonPin, bool hasPullup, unsigned long setDebounce, unsigned long holdTime)
-  : pin(buttonPin), inputPtr(nullptr), debounceTiming(setDebounce), holdThreashold(holdTime) {
+  : _pin(buttonPin), _inputPtr(nullptr), _hasPullup(hasPullup), _debounceTiming(setDebounce), _holdThreashold(holdTime) {
 
   // BUTTON INITIALIZATION
-  if (hasPullup) pinMode(pin, INPUT_PULLUP);
-  else pinMode(pin, INPUT);
-
-  // LOGIC
-  activeState = (hasPullup) ? LOW : HIGH;
-  inactiveState = !activeState;
-
-  // SET STATES
-  buttonState = digitalRead(pin);
-  prevButtonState = buttonState;
-
-  // DEBOUNCE
-  now = millis();
-  nextDebounce = 0;
-
-  // FLAGS
-  buttonHeldTimer = 0;
-  pushedFlag = false;
-  heldFlag = false;
+  if (_hasPullup) pinMode(_pin, INPUT_PULLUP);
+  else pinMode(_pin, INPUT);
+  _buttonState = digitalRead(_pin);
+  this->init();
 }
 
-Button::Button(bool *input, bool hasPullup, unsigned long setDebounce, unsigned long holdTime)
-  : pin(0), inputPtr(input), debounceTiming(setDebounce), holdThreashold(holdTime) {
+Button::Button(bool *input, bool hasPullup, unsigned long holdTime)
+  : _pin(0), _inputPtr(input), _hasPullup(hasPullup), _holdThreashold(holdTime), _debounceTiming(0) {
+    _buttonState = *_inputPtr;
+    this->init();
+  }
 
+void Button::init() {
   // LOGIC
-  activeState = (hasPullup) ? LOW : HIGH;
-  inactiveState = !activeState;
-
-  // SET STATES
-  buttonState = *inputPtr;
-  prevButtonState = buttonState;
-
-  // DEBOUNCE
-  now = millis();
-  nextDebounce = 0;
-
-  // FLAGS
-  buttonHeldTimer = 0;
-  pushedFlag = false;
-  heldFlag = false;
+  _activeState = (_hasPullup) ? LOW : HIGH;
+  _inactiveState = !_activeState;
+  _prevButtonState = _buttonState;
+  _now = millis();
+  _nextDebounce = 0;
+  _buttonHeldTimer = 0;
+  _pushedFlag = false;
+  _heldFlag = false;
 }
 
 bool Button::getButtonState() {
-  if (inputPtr == nullptr) buttonState = digitalRead(pin);
-  else buttonState = *inputPtr;
-  return buttonState;
+  if (_inputPtr == nullptr) _buttonState = digitalRead(_pin);
+  else _buttonState = *_inputPtr;
+  return _buttonState;
 }
 
 bool Button::isDebounced() {
-  if (buttonState != prevButtonState) {
-    if (now >= nextDebounce) {
-      nextDebounce = now + debounceTiming;
+  if (_buttonState != _prevButtonState) {
+    if (_now >= _nextDebounce) {
+      _nextDebounce = _now + _debounceTiming;
       return true;
     }
   }
@@ -63,24 +45,24 @@ bool Button::isDebounced() {
 }
 
 void Button::update() {
-  pushedFlag = false;
-  heldFlag = false;
-  now = millis();
-  buttonState = getButtonState();
+  _pushedFlag = false;
+  _heldFlag = false;
+  _now = millis();
+  _buttonState = getButtonState();
   if (isDebounced()) {
-    if (buttonState == activeState && prevButtonState == inactiveState) buttonHeldTimer = now;
-    if (buttonState == inactiveState && prevButtonState == activeState) {
-      if (now - buttonHeldTimer >= holdThreashold) heldFlag = true;
-      else pushedFlag = true;
+    if (_buttonState == _activeState && _prevButtonState == _inactiveState) _buttonHeldTimer = _now;
+    if (_buttonState == _inactiveState && _prevButtonState == _activeState) {
+      if (_now - _buttonHeldTimer >= _holdThreashold) _heldFlag = true;
+      else _pushedFlag = true;
     }
   }
-  prevButtonState = buttonState;
+  _prevButtonState = _buttonState;
 }
 
-bool Button::wasPressed() {
-  return pushedFlag;
+bool Button::pressed() {
+  return _pushedFlag;
 }
 
-bool Button::wasHeld() {
-  return heldFlag;
+bool Button::held() {
+  return _heldFlag;
 }

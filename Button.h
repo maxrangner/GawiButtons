@@ -3,34 +3,32 @@
 
 class Button {
   // BUTTON
-  uint8_t pin;
-  bool* inputPtr;
-  bool buttonState;
-  bool prevButtonState;
+  uint8_t _pin;
+  bool* _inputPtr;
+  bool _hasPullup;
+  bool _buttonState;
+  bool _prevButtonState;
   // DEBOUNCE
-  unsigned long now;
-  unsigned long debounceTiming;
-  unsigned long nextDebounce;
+  unsigned long _now;
+  unsigned long _debounceTiming;
+  unsigned long _nextDebounce;
   // LOGIC
-  bool activeState;
-  bool inactiveState;
-  unsigned long holdThreashold;
-  unsigned long buttonHeldTimer;
-  bool pushedFlag;
-  bool heldFlag;
+  bool _activeState;
+  bool _inactiveState;
+  unsigned long _holdThreashold;
+  unsigned long _buttonHeldTimer;
+  bool _pushedFlag;
+  bool _heldFlag;
 public:
   // CONSTRUCTORS
   Button(uint8_t buttonPin, bool hasPullup, unsigned long setDebounce, unsigned long holdTime);
-  Button(bool *input, bool hasPullup, unsigned long setDebounce, unsigned long holdTime);
-  // DEFAULTS
-  static constexpr unsigned long DefaultDebounce = 50;
-  static constexpr unsigned long DefaultHold = 300;
-  static constexpr bool DefaultPullup = false;
+  Button(bool *input, bool hasPullup, unsigned long holdTime);
   // CORE
+  void init();
   bool getButtonState();
   bool isDebounced();
   void update();
-  bool wasPressed();
-  bool wasHeld();
+  bool pressed();
+  bool held();
 };
 

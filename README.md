@@ -11,9 +11,12 @@ GawiButtons is a lightweight Arduino library with debounced button handling. It 
 * Press and hold detection.
 * ButtonManager for centralized updates.
 * Optional pull-up support.
+* Logical pin. Takes pointer to bool as input.
 
 ## Installation
-### Library Manager (recommended)
+1. Search for GawiButtons in the Arduino IDE library manager.
+2. Choose latest release.
+3. Click "install".
 * Coming soon.
 ### Manual installation
 1. Download the .zip from GitHub.
