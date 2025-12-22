@@ -19,6 +19,7 @@ class Button {
   unsigned long _buttonHeldTimer;
   bool _pushedFlag;
   bool _heldFlag;
+  bool _releasedFlag;
 public:
   // CONSTRUCTORS
   Button(uint8_t buttonPin, bool hasPullup, unsigned long setDebounce, unsigned long holdTime);
@@ -30,5 +31,6 @@ public:
   void update();
   bool pressed();
   bool held();
+  bool released();
 };
 
