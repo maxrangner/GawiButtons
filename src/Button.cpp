@@ -26,6 +26,7 @@ void Button::init() {
   _buttonHeldTimer = 0;
   _pushedFlag = false;
   _heldFlag = false;
+  _pressedFlag = false;
   _releasedFlag = false;
 }
 
@@ -48,11 +49,15 @@ bool Button::isDebounced() {
 void Button::update() {
   _pushedFlag = false;
   _heldFlag = false;
+  _pressedFlag = false;
   _releasedFlag = false;
   _now = millis();
   _buttonState = getButtonState();
   if (isDebounced()) {
-    if (_buttonState == _activeState && _prevButtonState == _inactiveState) _buttonHeldTimer = _now;
+    if (_buttonState == _activeState && _prevButtonState == _inactiveState) {
+      _buttonHeldTimer = _now;
+      _pressedFlag = true;
+    }
     if (_buttonState == _inactiveState && _prevButtonState == _activeState) {
       _releasedFlag = true;
       if (_now - _buttonHeldTimer >= _holdThreashold) _heldFlag = true;
@@ -62,12 +67,16 @@ void Button::update() {
   _prevButtonState = _buttonState;
 }
 
-bool Button::pressed() {
+bool Button::wasPushed() {
   return _pushedFlag;
 }
 
-bool Button::held() {
+bool Button::wasHeld() {
   return _heldFlag;
+}
+
+bool Button::pressed() {
+  return _pressedFlag;
 }
 
 bool Button::released() {

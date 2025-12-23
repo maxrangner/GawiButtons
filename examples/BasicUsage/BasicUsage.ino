@@ -42,14 +42,14 @@ void loop() {
 
   // delay(1000);
   // Pressed logic:
-  if (buttonBuiltIn->pressed()) {
+  if (buttonBuiltIn->wasPushed()) {
     digitalWrite(8, stateLED);
     stateLED = !stateLED;
     Serial.println("Button was pressed.");
   }
 
   // Held logic:
-  if (buttonBuiltIn->held()) {
+  if (buttonBuiltIn->wasPressed()) {
     Serial.println("Button was held.");
   }
 }

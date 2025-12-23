@@ -54,11 +54,11 @@ buttonManager.updateAll();
 
 2. Button states logic:
 ```cpp
-if (buttonBuiltIn->pressed()) {
+if (buttonBuiltIn->wasPushed()) {
     Serial.println("Button was pressed.");
 }
 
-if (buttonBuiltIn->held()) {
+if (buttonBuiltIn->wasHeld()) {
     Serial.println("Button was held.");
 }
 ```

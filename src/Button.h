@@ -19,6 +19,7 @@ class Button {
   unsigned long _buttonHeldTimer;
   bool _pushedFlag;
   bool _heldFlag;
+  bool _pressedFlag;
   bool _releasedFlag;
 public:
   // CONSTRUCTORS
@@ -29,8 +30,9 @@ public:
   bool getButtonState();
   bool isDebounced();
   void update();
+  bool wasPushed();
+  bool wasHeld();
   bool pressed();
-  bool held();
   bool released();
 };
 
